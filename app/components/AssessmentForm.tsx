@@ -3,6 +3,7 @@ import { Mail, Phone, Send, User } from "lucide-react";
 import React from "react";
 import { Toaster } from "react-hot-toast";
 import { Input, RadioGroup } from "../page";
+import Image from "next/image";
 
 const AssessmentForm = ({
   handleSubmit,
@@ -37,7 +38,14 @@ const AssessmentForm = ({
         {/* Header */}
         <div className="text-center mb-8">
           <div className="mx-auto w-14 h-14 bg-red-500/20 rounded-xl flex items-center justify-center mb-4">
-            <User className="w-7 h-7 text-red-400" />
+            {/* <User className="w-7 h-7 text-red-400" /> */}
+            <Image
+              src="/images/logo.png"
+              unoptimized
+              alt="logo"
+              width={500}
+              height={500}
+            />
           </div>
 
           <h1 className="text-3xl font-semibold text-white">
