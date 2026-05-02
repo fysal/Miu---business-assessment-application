@@ -4,21 +4,42 @@ import { z } from "zod";
 import { headers } from "next/headers";
 import { ratelimit, simpleRateLimit } from "@/app/lib/rate-liimt";
 
+//Function to be moved in own file
 const formSchema = z.object({
-  brandName: z.string().min(2, "Brand name is too short"),
-  category: z.string().min(2, "category  is too short"),
-  phone: z.string().min(8, "Please enter a valid phone number"),
-  email: z.string().email("Please enter a valid email address"),
-  challenge: z.string().min(2, "Please enter valid information"),
-  consistency: z.string().min(2, "Please enter valid informtion"),
-  contactName: z.string().min(2, "Please enter valid information"),
-  investment: z.string().min(2, "Please enter valid information"),
-  market: z.string().min(2, "Please enter valid information"),
-  packaging: z.string().min(2, "Please enter valid information"),
-  productionCapacity: z.string().min(2, "Please enter valid information"),
-  scaling: z.string().min(2, "Please enter valid information"),
-  sellingStage: z.string().min(2, "Please enter valid information"),
-  targetMarket: z.string().min(2, "Please enter valid information"),
+  brandName: z
+    .string({
+      message: "Please enter your Brand name",
+    })
+    .min(2, "Brand name is too short"),
+  category: z
+    .string({ message: "Product category is required" })
+    .min(2, "category  is too short"),
+  phone: z
+    .string({ message: "Please enter phone number" })
+    .min(8, "Please enter a valid phone number"),
+  email: z
+    .string({ message: "Please enter your email address" })
+    .email("Please enter a valid email address"),
+  challenge: z
+    .string({ message: "Please enter challenge faced" })
+    .min(2, "Challenge text is too short"),
+  consistency: z
+    .string({ message: "Consistency information is required" })
+    .min(2, "Consistency information is too short"),
+  contactName: z
+    .string({ message: "Please enter valid information" })
+    .min(2, "Contact name is too short"),
+  investment: z.string({ message: "Please enter valid information" }),
+  market: z.string({ message: "Market field is required" }),
+  packaging: z.string({ message: "Packaging information is required" }),
+  productionCapacity: z
+    .string({ message: "Please enter product capacity information" })
+    .min(2, "Please enter valid information"),
+  scaling: z.string({ message: "Please enter valid information" }),
+  sellingStage: z.string({
+    message: "Please enter where you sell information",
+  }),
+  targetMarket: z.string({ message: "Please select your target market" }),
 });
 
 export async function registerForEvent(
@@ -30,7 +51,7 @@ export async function registerForEvent(
   //Validation
   const validated = formSchema.safeParse(data);
   if (!validated.success) {
-    return { success: false, error: validated.error.issues[0].message };
+    return { success: false, message: validated.error.issues[0].message };
   }
 
   // Rate limiting
@@ -51,7 +72,7 @@ export async function registerForEvent(
   if (!rateLimitResult.success) {
     return {
       success: false,
-      error:
+      message:
         "Too many registration attempts. Please try again later (max 5 per hour).",
     };
   }
