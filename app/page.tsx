@@ -35,6 +35,7 @@ export default function EventRegistration() {
 
     const result = await registerForEvent(unknown, formData);
     setIsLoading(false);
+    setStep(1);
 
     if (result.success) {
       // Pass data to success page via search params or state management
