@@ -27,7 +27,7 @@ const AssessmentForm = ({
   ) => void;
 }) => {
   return (
-    <div className="min-h-screen h-full flex items-center justify-center p-3 md:p-6">
+    <div className="min-h-screen h-full overflow-x-hidden flex items-center justify-center p-3 md:p-6 relative">
       <Toaster position="top-center" />
 
       {/* Glow effects */}
