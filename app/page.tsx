@@ -1,65 +1,153 @@
-import Image from "next/image";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+"use client";
 
-export default function Home() {
+import { useState } from "react";
+import { registerForEvent } from "./actions";
+import { unknown } from "zod";
+import AssessmentForm from "./components/AssessmentForm";
+import toast from "react-hot-toast";
+
+export default function EventRegistration() {
+  const [step, setStep] = useState(1);
+  const [formSubData, setFormSubData] = useState<any>({ targetMarket: [] });
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const nextStep = () => setStep((prev) => prev + 1);
+  const prevStep = () => setStep((prev) => prev - 1);
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+
+    setIsLoading(true);
+    //append values to formData element
+    const formData = new FormData();
+
+    Object.entries(formSubData).forEach(([key, value]) => {
+      if (key === "targetMarket" && Array.isArray(value)) {
+        return formData.append(key, [...value].join(", "));
+      } else {
+        formData.append(
+          key,
+          typeof value === "string" ? value : JSON.stringify(value),
+        );
+      }
+    });
+
+    const result = await registerForEvent(unknown, formData);
+    setIsLoading(false);
+
+    if (result.success) {
+      // Pass data to success page via search params or state management
+      toast.success(result.message);
+    } else {
+      toast.error(result.message);
+      //  if (result.error.includes("email")) setErrors({ email: result.error });
+    }
+    setFormSubData({ targetMarket: [] });
+  }
+
+  const onHandleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >,
+  ) => {
+    const { name, value } = e.target;
+    // console.log(value);
+    if (name === "targetMarket") {
+      //chcek if value exist and remove it
+      const val = formSubData.targetMarket;
+
+      setFormSubData((prev: any) => ({
+        ...prev,
+        [name]: val.includes(value)
+          ? val.filter((v: string) => v !== value)
+          : [...val, value],
+      }));
+    } else setFormSubData((prev: any) => ({ ...prev, [name]: value }));
+  };
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
+    <AssessmentForm
+      step={step}
+      formSubData={formSubData}
+      prevStep={prevStep}
+      nextStep={nextStep}
+      handleSubmit={handleSubmit}
+      onHandleChange={onHandleChange}
+      isLoading={isLoading}
+    />
+  );
+}
+
+/* Reusable Input */
+export function Input({
+  label,
+  name,
+  required = false,
+  onChange,
+  value,
+  loading,
+}: {
+  label: string;
+  required?: boolean;
+  name: string;
+  loading: boolean;
+  value?: string | null;
+  onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+}) {
+  return (
+    <div>
+      <label className="label">{label}</label>
+      <input
+        name={name}
+        onChange={onChange}
+        required={required}
+        value={value ?? ""}
+        disabled={loading}
+        className="input-styles"
+      />
+    </div>
+  );
+}
+
+/* Radio Group */
+export function RadioGroup({
+  name,
+  label,
+  options,
+  onChange,
+  checkedValue,
+  loading,
+}: {
+  name: string;
+  label: string;
+  options: string[];
+  checkedValue: string;
+  loading: boolean;
+  onChange?: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+  ) => void;
+}) {
+  return (
+    <div>
+      <p className=" text-white mb-2">{label}</p>
+      {options.map((option) => (
+        <label
+          key={option}
+          className="flex items-center gap-2 mb-2 text-white text-xs">
+          <input
+            type="radio"
+            className="checkbox"
+            name={name}
+            checked={option === checkedValue}
+            value={option}
+            disabled={loading}
+            onChange={onChange}
+            required={true}
+          />
+          {option}
+        </label>
+      ))}
     </div>
   );
 }
