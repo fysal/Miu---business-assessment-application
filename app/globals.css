@@ -53,9 +53,9 @@ body {
 .icon {
   position: absolute;
   left: 10px;
-  top: 12px;
+
   width: 18px;
-  height: 18px;
+  height: 17px;
   color: #f87171;
 }
 
@@ -73,6 +73,10 @@ body {
 input[type="radio"],
 input[type="checkbox"] {
   accent-color: #ef4444;
+}
+
+.inwardpad {
+  padding-left: 34px;
 }
 
 .checkbox:checked,

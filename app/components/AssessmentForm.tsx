@@ -88,14 +88,14 @@ const AssessmentForm = ({
 
               <div className="md:col-span-2">
                 <label className="label">Email Address</label>
-                <div className="relative flex">
+                <div className="relative flex items-center ">
                   <Mail className="icon" />
                   <input
                     type="email"
                     name="email"
                     value={formSubData.email}
                     disabled={isLoading}
-                    className="input-styles pl-10"
+                    className="input-styles pl-10 inwardpad"
                     required
                     onChange={onHandleChange}
                   />
@@ -104,7 +104,7 @@ const AssessmentForm = ({
 
               <div className="md:col-span-2">
                 <label className="label">Phone Number</label>
-                <div className="relative">
+                <div className="relative flex items-center ">
                   <Phone className="icon" />
                   <input
                     type="tel"
@@ -114,7 +114,7 @@ const AssessmentForm = ({
                     disabled={isLoading}
                     placeholder="+256"
                     onChange={onHandleChange}
-                    className="input-styles  pl-10"
+                    className="input-styles  pl-10 inwardpad"
                   />
                 </div>
               </div>
