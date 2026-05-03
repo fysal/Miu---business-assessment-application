@@ -40,11 +40,11 @@ export default function EventRegistration() {
     if (result.success) {
       // Pass data to success page via search params or state management
       toast.success(result.message);
+      setFormSubData({ targetMarket: [] });
     } else {
       toast.error(result.message);
       //  if (result.error.includes("email")) setErrors({ email: result.error });
     }
-    setFormSubData({ targetMarket: [] });
   }
 
   const onHandleChange = (
