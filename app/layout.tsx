@@ -19,7 +19,7 @@ const sora = Sora({
 });
 
 export const metadata: Metadata = {
-  title: "Business Assessment",
+  title: "Business Assessment Application",
   description: "Pilot Program",
 };
 
