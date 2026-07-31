@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Mail, Phone, Send, User } from "lucide-react";
+import { Mail, Phone, Send } from "lucide-react";
 import React from "react";
 import { Toaster } from "react-hot-toast";
 import { Input, RadioGroup } from "../page";
