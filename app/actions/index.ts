@@ -55,27 +55,27 @@ export async function registerForEvent(
   }
 
   // Rate limiting
-  const headerList = await headers();
-  const ip =
-    headerList.get("x-forwarded-for")?.split(",")[0] ||
-    headerList.get("x-real-ip") ||
-    "127.0.0.1";
+  // const headerList = await headers();
+  // const ip =
+  //   headerList.get("x-forwarded-for")?.split(",")[0] ||
+  //   headerList.get("x-real-ip") ||
+  //   "127.0.0.1";
 
-  let rateLimitResult;
+  // let rateLimitResult;
 
-  if (process.env.UPSTASH_REDIS_REST_URL) {
-    rateLimitResult = await ratelimit.limit(ip);
-  } else {
-    rateLimitResult = await simpleRateLimit(ip);
-  }
+  // if (process.env.UPSTASH_REDIS_REST_URL) {
+  //   rateLimitResult = await ratelimit.limit(ip);
+  // } else {
+  //   rateLimitResult = await simpleRateLimit(ip);
+  // }
 
-  if (!rateLimitResult.success) {
-    return {
-      success: false,
-      message:
-        "Too many registration attempts. Please try again later (max 5 per hour).",
-    };
-  }
+  // if (!rateLimitResult.success) {
+  //   return {
+  //     success: false,
+  //     message:
+  //       "Too many registration attempts. Please try again later (max 5 per hour).",
+  //   };
+  // }
 
   //Submit to Google Apps Script
   try {
